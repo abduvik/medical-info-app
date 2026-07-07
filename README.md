@@ -45,7 +45,7 @@ patient-timeseries/
     src/
       app/                  # Next.js App Router (layout, page, globals.scss)
       components/           # Providers, PatientTable
-      lib/trpc.ts           # tRPC React client
+      lib/trpc.tsx           # tRPC React client
 ```
 
 Both apps are run via root-level npm scripts that target each folder

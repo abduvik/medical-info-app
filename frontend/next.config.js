@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   // Static export: the prod frontend is served entirely by nginx (no Node
