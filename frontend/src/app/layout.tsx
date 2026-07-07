@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Providers from "@/components/Providers";
 import "./globals.scss";
 import React from "react";
+import { PageLayout } from "@/components/Layout/PageLayout";
 
 export const metadata: Metadata = {
   title: "Patient Time Series",
@@ -13,11 +13,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
-  );
+  return <PageLayout>{children}</PageLayout>;
 }

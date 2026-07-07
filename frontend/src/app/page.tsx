@@ -3,6 +3,8 @@
 import PatientTable from "@/components/PatientTable";
 import { useTRPC } from "@/lib/trpc";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Header } from "@/components/Basic/Header";
+import { Button } from "@/components/Basic/Button";
 
 export default function Home() {
   const trpc = useTRPC();
@@ -29,34 +31,29 @@ export default function Home() {
     initQuery.isFetching || resetMutation.isPending || addNewMutation.isPending;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10">
-      <header className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Patient Time Series
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Data mocked from an external API and persisted in PostgreSQL via
-            Prisma.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <button
-            className="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-900 transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
-            onClick={() => resetMutation.mutate({})}
-            disabled={isBusy}
-          >
-            {resetMutation.isPending ? "Resetting…" : "Reset"}
-          </button>
-          <button
-            className="cursor-pointer rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
-            onClick={() => addNewMutation.mutate({})}
-            disabled={isBusy}
-          >
-            {addNewMutation.isPending ? "Fetching…" : "Add new data"}
-          </button>
-        </div>
-      </header>
+    <>
+      <Header
+        title="Patient Time Series"
+        subtitle="Data mocked from an external API and persisted in PostgreSQL via Prisma."
+        actions={
+          <>
+            <Button
+              variant="secondary"
+              onClick={() => resetMutation.mutate({})}
+              disabled={isBusy}
+            >
+              {resetMutation.isPending ? "Resetting…" : "Reset"}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => addNewMutation.mutate({})}
+              disabled={isBusy}
+            >
+              {addNewMutation.isPending ? "Fetching…" : "Add new data"}
+            </Button>
+          </>
+        }
+      />
 
       {initQuery.isLoading && (
         <p className="text-gray-600">Loading patients…</p>
@@ -74,15 +71,7 @@ export default function Home() {
         </p>
       )}
 
-      {initQuery.data && (
-        <>
-          <p className="mb-3 text-sm text-gray-500">
-            {patients.length} patient{patients.length !== 1 ? "s" : ""} loaded
-          </p>
-          {/*todo: remove any casts*/}
-          <PatientTable patients={patients as any} />
-        </>
-      )}
-    </main>
+      {initQuery.data && <PatientTable patients={patients} />}
+    </>
   );
 }
