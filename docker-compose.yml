@@ -1,0 +1,28 @@
+# Dev mode: this compose file only runs PostgreSQL. Run the backend
+# (NestJS + tRPC) and frontend (Next.js) directly on the host with
+# `npm run dev`, which starts both concurrently against this database.
+#
+# Usage:
+#   cp .env.example .env
+#   docker compose up -d       # starts Postgres only
+#   npm install
+#   npx prisma migrate deploy
+#   npm run dev                # backend :4000, frontend :3000
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:

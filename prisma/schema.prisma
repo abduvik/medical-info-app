@@ -1,0 +1,52 @@
+// Prisma schema for the patient time-series case study.
+//
+// Design notes:
+// - `Patient` corresponds to a single "client_id" returned by the mock API.
+// - `Observation` corresponds to a single timepoint (row) in that patient's
+//   time series. A patient can have zero, one, or many observations.
+// - The mock API's measurement fields (creatine, chloride, fasting_glucose,
+//   potassium, sodium, total_calcium, total_protein - and their *_unit
+//   companions) are NOT modeled as fixed columns. They're stored as-is in
+//   `metadata` (a JSON column), so the schema doesn't need to change if the
+//   mock API adds/removes/renames measurement fields.
+// - `dateTesting` + `patientId` is unique so re-fetching the same patient
+//   (unlikely, since client_id is randomly generated, but possible) never
+//   creates duplicate timepoints.
+// - Cascading delete on Patient -> Observation keeps "reset" simple and safe.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id           String        @id @default(uuid())
+  clientId     String        @unique
+  birthdate    DateTime?
+  gender       Int?
+  ethnicity    Int?
+  createdAt    DateTime      @default(now())
+  observations Observation[]
+
+  @@index([createdAt])
+}
+
+model Observation {
+  id          String   @id @default(uuid())
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  patientId   String
+  dateTesting DateTime
+
+  /// Unstructured measurement data for this timepoint, e.g.
+  /// { "creatine": 1.2, "creatine_unit": "mg/dL", "chloride": 101, ... }
+  metadata    Json
+
+  createdAt   DateTime @default(now())
+
+  @@unique([patientId, dateTesting])
+  @@index([patientId, dateTesting])
+}
