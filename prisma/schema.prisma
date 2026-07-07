@@ -15,12 +15,12 @@
 // - Cascading delete on Patient -> Observation keeps "reset" simple and safe.
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Patient {

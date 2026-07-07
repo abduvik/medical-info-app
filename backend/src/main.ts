@@ -1,8 +1,8 @@
-import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import "reflect-metadata";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
-async function bootstrap() {
+(async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
@@ -14,6 +14,4 @@ async function bootstrap() {
   await app.listen(port);
   // eslint-disable-next-line no-console
   console.log(`Backend listening on http://localhost:${port} (tRPC at /trpc)`);
-}
-
-bootstrap();
+})();

@@ -1,15 +1,21 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { MockApiService, MockObservationRow } from './mock-api.service';
-import { ObservationMetadata } from './observation-metadata';
+import { Injectable, Logger } from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
+import { MockApiService, MockObservationRow } from "./mock-api.service";
+import { ObservationMetadata } from "./observation-metadata";
+import { Prisma } from "../../../generated/prisma/client";
 
 const DEFAULT_PATIENT_COUNT = Number(process.env.DEFAULT_PATIENT_COUNT ?? 10);
 
 // Fields that map onto structured Patient/Observation columns. Everything
 // else on a mock API row is unstructured measurement data and gets stored
 // verbatim in Observation.metadata.
-const KNOWN_FIELDS = new Set(['client_id', 'date_testing', 'date_birthdate', 'gender', 'ethnicity']);
+const KNOWN_FIELDS = new Set([
+  "client_id",
+  "date_testing",
+  "date_birthdate",
+  "gender",
+  "ethnicity",
+]);
 
 function extractMetadata(row: MockObservationRow): ObservationMetadata {
   const metadata: ObservationMetadata = {};
@@ -33,9 +39,9 @@ export class PatientsService {
   /** Returns all patients with their observations, ordered for stable display. */
   async getAll() {
     return this.prisma.patient.findMany({
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
       include: {
-        observations: { orderBy: { dateTesting: 'asc' } },
+        observations: { orderBy: { dateTesting: "asc" } },
       },
     });
   }
@@ -48,7 +54,9 @@ export class PatientsService {
   async ensureSeeded(count: number = DEFAULT_PATIENT_COUNT) {
     const existing = await this.prisma.patient.count();
     if (existing === 0) {
-      this.logger.log(`Database empty - seeding ${count} patients from mock API`);
+      this.logger.log(
+        `Database empty - seeding ${count} patients from mock API`,
+      );
       const datasets = await this.mockApi.fetchPatients(count);
       await this.persist(datasets);
     }
@@ -57,7 +65,7 @@ export class PatientsService {
 
   /** Empties the DB and re-seeds it with a fresh batch of patients. */
   async reset(count: number = DEFAULT_PATIENT_COUNT) {
-    this.logger.log('Resetting database');
+    this.logger.log("Resetting database");
     // Observations cascade-delete with their Patient.
     await this.prisma.patient.deleteMany({});
     const datasets = await this.mockApi.fetchPatients(count);
@@ -95,7 +103,9 @@ export class PatientsService {
           update: {},
           create: {
             clientId: first.client_id,
-            birthdate: first.date_birthdate ? new Date(first.date_birthdate) : null,
+            birthdate: first.date_birthdate
+              ? new Date(first.date_birthdate)
+              : null,
             gender: first.gender ?? null,
             ethnicity: first.ethnicity ?? null,
           },
