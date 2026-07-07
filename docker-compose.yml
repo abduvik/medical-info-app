@@ -1,25 +1,49 @@
-# Dev mode: this compose file only runs PostgreSQL. Run the backend
-# (NestJS + tRPC) and frontend (Next.js) directly on the host with
-# `npm run dev`, which starts both concurrently against this database.
-#
-# Usage:
-#   cp .env.example .env
-#   docker compose up -d       # starts Postgres only
-#   npm install
-#   npx prisma migrate deploy
-#   npm run dev                # backend :4000, frontend :3000
 services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      # Overrides the .env DATABASE_URL (which points at localhost for
+      # host-based dev) so the containerized backend talks to the "db"
+      # service by its Docker network hostname instead.
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    profiles:
+      - production
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      args:
+        NEXT_PUBLIC_TRPC_URL: ${NEXT_PUBLIC_TRPC_URL}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    profiles:
+      - production
+
   db:
-    image: postgres:16-alpine
+    image: postgres:18.4-alpine
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 10

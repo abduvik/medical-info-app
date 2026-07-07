@@ -14,15 +14,13 @@ export default function Home() {
 
   const resetMutation = useMutation(
     trpc.patients.reset.mutationOptions({
-      //@todo: check to add or remove onSuccess
-      // onSuccess: (data) => utils.patients.init.setData(undefined, data),
+      onSettled: () => initQuery.refetch(),
     }),
   );
 
   const addNewMutation = useMutation(
     trpc.patients.addNew.mutationOptions({
-      //@todo: check to add or remove onSuccess
-      // onSuccess: (data) => utils.patients.init.setData(undefined, data),
+      onSettled: () => initQuery.refetch(),
     }),
   );
 
@@ -44,14 +42,14 @@ export default function Home() {
         </div>
         <div className="flex gap-3">
           <button
-            className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-900 transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
+            className="cursor-pointer rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-900 transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
             onClick={() => resetMutation.mutate({})}
             disabled={isBusy}
           >
             {resetMutation.isPending ? "Resetting…" : "Reset"}
           </button>
           <button
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="cursor-pointer rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
             onClick={() => addNewMutation.mutate({})}
             disabled={isBusy}
           >

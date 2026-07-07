@@ -39,9 +39,9 @@ export class PatientsService {
   /** Returns all patients with their observations, ordered for stable display. */
   async getAll() {
     return this.prisma.patient.findMany({
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
       include: {
-        observations: { orderBy: { dateTesting: "asc" } },
+        observations: { orderBy: { createdAt: "desc" } },
       },
     });
   }
