@@ -1,14 +1,17 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { MockApiService, MockObservationRow } from "./mock-api.service";
-import { ObservationMetadata } from "./observation-metadata";
+import {
+  MockApiService,
+  MockObservationRow,
+} from "../mock-api/mock-api.service";
+import { ObservationMetadata } from "../mock-api/observation-metadata";
 import { Prisma } from "../../../generated/prisma/client";
 
 const DEFAULT_PATIENT_COUNT = Number(process.env.DEFAULT_PATIENT_COUNT ?? 10);
 
 // Fields that map onto structured Patient/Observation columns. Everything
 // else on a mock API row is unstructured measurement data and gets stored
-// verbatim in Observation.metadata.
+// in Observation.metadata.
 const KNOWN_FIELDS = new Set([
   "client_id",
   "date_testing",
@@ -36,7 +39,7 @@ export class PatientsService {
     private readonly mockApi: MockApiService,
   ) {}
 
-  /** Returns all patients with their observations, ordered for stable display. */
+  /** Returns all patients with their observations with the most recent first */
   async getAll() {
     return this.prisma.patient.findMany({
       orderBy: { createdAt: "desc" },
@@ -48,8 +51,7 @@ export class PatientsService {
 
   /**
    * Called when the app is opened in the browser. If the DB is already
-   * populated we just return the existing data (stateless/idempotent);
-   * otherwise we seed it from the mock API.
+   * populated we just return the existing data, otherwise we seed it from the mock API.
    */
   async ensureSeeded(count: number = DEFAULT_PATIENT_COUNT) {
     const existing = await this.prisma.patient.count();
@@ -82,13 +84,7 @@ export class PatientsService {
   }
 
   /**
-   * Persists a batch of mock-API datasets. Each dataset is upserted as a
-   * Patient (keyed by the mock API's client_id) with its observations bulk
-   * inserted, skipping any timepoint duplicates. All the measurement fields
-   * (creatine, chloride, etc. and their unit companions) are stored as-is in
-   * the `metadata` JSON column, so this code never needs to change if the
-   * mock API's measurement fields evolve. Wrapped in a transaction so a
-   * failure partway through a batch does not leave partial data behind.
+   * Persists a batch of mock-API datasets.
    */
   private async persist(datasets: MockObservationRow[][]) {
     const nonEmpty = datasets.filter((rows) => rows.length > 0);

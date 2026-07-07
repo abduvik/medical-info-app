@@ -1,4 +1,4 @@
-import type { ObservationMetadata } from "../../../backend/src/patients/observation-metadata";
+import type { ObservationMetadata } from "../../../backend/src/mock-api/observation-metadata";
 import { formatDate } from "@/lib/utils";
 import { Observation, Patient } from "@/lib/types";
 
