@@ -14,5 +14,5 @@ import { AppModule } from "./app.module";
   const port = Number(process.env.BACKEND_PORT ?? process.env.PORT ?? 4000);
   await app.listen(port);
   // eslint-disable-next-line no-console
-  console.log(`Backend listening on http://localhost:${port} (tRPC at /trpc)`);
+  console.log(`Backend listening on ${port} (tRPC at /trpc)`);
 })();

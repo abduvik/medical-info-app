@@ -17,7 +17,13 @@ export function makeQueryClient() {
 }
 
 function getTrpcUrl() {
-  return process.env.NEXT_PUBLIC_TRPC_URL ?? "http://localhost:4000/trpc";
+  if (process.env.NEXT_PUBLIC_TRPC_URL) {
+    return process.env.NEXT_PUBLIC_TRPC_URL;
+  }
+  if (typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.hostname}:4000/trpc`;
+  }
+  return "http://localhost:4000/trpc";
 }
 
 export function TRPCReactProvider(
