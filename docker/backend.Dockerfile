@@ -1,13 +1,13 @@
-FROM node:20-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
 COPY prisma ./prisma
 RUN npm install
 
-COPY tsconfig.json tsconfig.build.json nest-cli.json ./
+COPY tsconfig.json prisma.config.ts tsconfig.build.json nest-cli.json ./
+COPY .generated ./.generated
 COPY backend ./backend
-RUN npx prisma generate
 RUN npm run build:backend
 
 
@@ -17,9 +17,9 @@ ENV NODE_ENV=production
 
 COPY package*.json ./
 COPY prisma ./prisma
-# pm2 is a regular ("production") dependency so it survives --omit=dev
+COPY .generated ./.generated
+COPY prisma.config.ts prisma.config.ts
 RUN npm install --omit=dev
-RUN npx prisma generate
 
 COPY --from=build /app/dist ./dist
 COPY ecosystem.config.js ./

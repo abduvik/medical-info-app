@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { Injectable, Logger } from "@nestjs/common";
 import { Mutation, Query, Router } from "nestjs-trpc";
 import { z } from "zod";

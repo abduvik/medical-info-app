@@ -1,3 +1,4 @@
-docker compose build
+npm install
+docker compose --profile production build
 npm run prisma:migrate:deploy
-docker compose up --profile production
+docker compose --profile production up

@@ -13,6 +13,7 @@
     "start:backend": "node dist/backend/main.js",
     "start:frontend": "next start frontend -p 3000",
     "start:backend:pm2": "pm2-runtime ecosystem.config.js",
+    "generate": "npm run prisma:generate && npm run trpc:generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",

@@ -5,7 +5,7 @@ import {
   MockObservationRow,
 } from "../mock-api/mock-api.service";
 import { ObservationMetadata } from "../mock-api/observation-metadata";
-import { Prisma } from "../../../generated/prisma/client";
+import { Prisma } from "../../../.generated/prisma/client";
 
 export const DEFAULT_PATIENT_COUNT = Number(
   process.env.DEFAULT_PATIENT_COUNT ?? 10,
