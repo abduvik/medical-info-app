@@ -3,7 +3,8 @@ const nextConfig = {
   // Static export: the prod frontend is served entirely by nginx (no Node
   // runtime needed for the frontend container). All data fetching happens
   // client-side via tRPC, so a fully static export works fine here.
-  output: 'export',
+  output: "export",
+  distDir: "../dist/frontend",
   images: {
     unoptimized: true,
   },

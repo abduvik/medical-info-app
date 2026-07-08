@@ -1,6 +1,6 @@
 import type { ObservationMetadata } from "../../../backend/src/mock-api/observation-metadata";
 import { formatDate } from "@/lib/utils";
-import { Observation, Patient } from "@/lib/types";
+import { Patient } from "@/lib/types";
 
 /**
  * Observation.metadata is unstructured JSON (whatever measurement fields the
@@ -10,11 +10,12 @@ import { Observation, Patient } from "@/lib/types";
  * across all loaded observations, so new/renamed measurement fields just show
  * up automatically.
  */
-function getMetadataColumns(patients: Patient[]): string[] {
+
+function getMetadataColumns(patients: any): string[] {
   const keys = new Set<string>();
   for (const patient of patients) {
     for (const obs of patient.observations) {
-      const metadata = (obs.metadata ?? {}) as unknown as ObservationMetadata;
+      const metadata = (obs.metadata ?? {}) as any;
       for (const key of Object.keys(metadata)) {
         if (!key.endsWith("_unit")) keys.add(key);
       }
@@ -83,9 +84,8 @@ export default function PatientTable({ patients }: { patients: Patient[] }) {
                   </td>
                 </tr>
               ) : (
-                patient.observations.map((obs: Observation, idx: number) => {
-                  const metadata = (obs.metadata ??
-                    {}) as unknown as ObservationMetadata;
+                patient.observations.map((obs: any, idx: number) => {
+                  const metadata = (obs.metadata ?? {}) as any;
                   return (
                     <tr key={obs.id}>
                       {idx === 0 && (

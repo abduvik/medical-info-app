@@ -4,6 +4,7 @@
   "sourceRoot": "backend/src",
   "entryFile": "main",
   "compilerOptions": {
+    "outDir": "dist/backend2",
     "deleteOutDir": true,
     "tsConfigPath": "tsconfig.build.json"
   }

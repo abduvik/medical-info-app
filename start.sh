@@ -1,4 +1,3 @@
-npm install
+# Build and then starting the App
 docker compose --profile production build
-npm run prisma:migrate:deploy
 docker compose --profile production up

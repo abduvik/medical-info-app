@@ -1,14 +1,14 @@
 module.exports = {
   apps: [
     {
-      name: 'patient-timeseries-backend',
-      script: 'dist/backend/main.js',
+      name: "patient-timeseries-backend",
+      script: "dist/backend/src/main.js",
       instances: 1,
-      exec_mode: 'fork',
+      exec_mode: "fork",
       autorestart: true,
-      max_memory_restart: '300M',
+      max_memory_restart: "300M",
       env: {
-        NODE_ENV: 'production',
+        NODE_ENV: "production",
       },
     },
   ],
