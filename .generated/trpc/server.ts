@@ -13,24 +13,28 @@ import { z } from "zod";
 
 const t = initTRPC.create();
 const publicProcedure = t.procedure;
-import type { PatientsRouter } from "../../backend/src/patients/patients.router";
+import { PatientsListSchema } from "../../backend/src/patients/patients.router";
 
 const appRouter = t.router({
   patients: t.router({
     getAll: publicProcedure
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as unknown as Awaited<ReturnType<PatientsRouter["getAll"]>>),
+      .output(PatientsListSchema)
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     init: publicProcedure
-      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as unknown as Awaited<ReturnType<PatientsRouter["init"]>>),
+      .output(PatientsListSchema)
+      .query(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     reset: publicProcedure
       .input(z
   .object({ count: z.number().int().positive().max(200).optional() })
   .optional())
-      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as unknown as Awaited<ReturnType<PatientsRouter["reset"]>>),
+      .output(PatientsListSchema)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any),
     addNew: publicProcedure
       .input(z
   .object({ count: z.number().int().positive().max(200).optional() })
   .optional())
-      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as unknown as Awaited<ReturnType<PatientsRouter["addNew"]>>)
+      .output(PatientsListSchema)
+      .mutation(async () => "PLACEHOLDER_DO_NOT_REMOVE" as any)
     })
 });
 
