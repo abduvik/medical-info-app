@@ -3,28 +3,21 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Mutation, Query, Router } from "nestjs-trpc";
 import { z } from "zod";
 import { DEFAULT_PATIENT_COUNT, PatientsService } from "./patients.service";
-import { ObservationMetadata } from "../mock-api/observation-metadata"; // hypothetical package decorators
+import { Patient } from "../../../.generated/prisma/client"; // hypothetical package decorators
 
 const countSchema = z
   .object({ count: z.number().int().positive().max(200).optional() })
   .optional();
 
-export const ObservationSchema = z.object({
-  id: z.string(),
-  dateTesting: z.date(),
-  metadata: z.custom<ObservationMetadata>(),
-});
+interface PatientWithObservations extends Patient {
+  observations: {
+    id: string;
+    dateTesting: Date;
+    metadata: Record<string, unknown>;
+  }[];
+}
 
-export const PatientWithObservationsSchema = z.object({
-  id: z.string(),
-  clientId: z.string(),
-  birthdate: z.date().nullable(),
-  gender: z.number().nullable(),
-  ethnicity: z.string().nullable(),
-  observations: z.array(ObservationSchema),
-});
-
-export const PatientsListSchema = z.array(PatientWithObservationsSchema);
+export const PatientsListSchema = z.array(z.custom<PatientWithObservations>());
 
 @Injectable()
 @Router({ alias: "patients" })
@@ -58,6 +51,7 @@ export class PatientsRouter {
     output: PatientsListSchema,
   })
   async reset(count: number = DEFAULT_PATIENT_COUNT) {
+    console.log(await this.patientsService.reset(count));
     return this.patientsService.reset(count);
   }
 
