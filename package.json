@@ -16,7 +16,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "trpc:generate": "npx nestjs-trpc generate"
+    "trpc:generate": "npx nestjs-trpc generate --output ./.generated/trpc/server.ts --entrypoint backend/src/app.module.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.27",

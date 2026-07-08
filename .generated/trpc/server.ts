@@ -13,7 +13,7 @@ import { z } from "zod";
 
 const t = initTRPC.create();
 const publicProcedure = t.procedure;
-import type { PatientsRouter } from "../patients/patients.router";
+import type { PatientsRouter } from "../../backend/src/patients/patients.router";
 
 const appRouter = t.router({
   patients: t.router({

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import React, { useState } from "react";
-import { AppRouter } from "../../../backend/src/@generated/server";
+import { AppRouter } from "../../../.generated/trpc/server";
 
 export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();
 
