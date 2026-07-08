@@ -15,7 +15,8 @@
     "start:backend:pm2": "pm2-runtime ecosystem.config.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
-    "prisma:migrate:deploy": "prisma migrate deploy"
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "trpc:generate": "npx nestjs-trpc generate"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.27",
@@ -28,6 +29,7 @@
     "@trpc/server": "^11.18.0",
     "@trpc/tanstack-react-query": "^11.18.0",
     "dotenv": "^17.4.2",
+    "nestjs-trpc": "^2.12.0",
     "next": "^16.2.10",
     "pg": "^8.22.0",
     "pm2": "^7.0.3",

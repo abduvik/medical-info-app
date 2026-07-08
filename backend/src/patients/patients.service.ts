@@ -7,7 +7,9 @@ import {
 import { ObservationMetadata } from "../mock-api/observation-metadata";
 import { Prisma } from "../../../generated/prisma/client";
 
-const DEFAULT_PATIENT_COUNT = Number(process.env.DEFAULT_PATIENT_COUNT ?? 10);
+export const DEFAULT_PATIENT_COUNT = Number(
+  process.env.DEFAULT_PATIENT_COUNT ?? 10,
+);
 
 // Fields that map onto structured Patient/Observation columns. Everything
 // else on a mock API row is unstructured measurement data and gets stored
